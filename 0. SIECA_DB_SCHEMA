@@ -1,0 +1,1464 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.2
+-- Dumped by pg_dump version 15.2
+
+-- Started on 2023-05-19 07:03:31
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 3599 (class 1262 OID 16398)
+-- Name: Sieca; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE "Sieca" WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'Spanish_Colombia.1252';
+
+
+ALTER DATABASE "Sieca" OWNER TO postgres;
+
+\connect "Sieca"
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 214 (class 1259 OID 16399)
+-- Name: AccessUser; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."AccessUser" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL,
+    "UserName" character varying(50) NOT NULL,
+    "Email" character varying(50) NOT NULL,
+    "FirstName" character varying(150) NOT NULL,
+    "OtherNames" character varying(250),
+    "LastName" character varying(150) NOT NULL,
+    "OtherLastName" character varying(250),
+    "RequirePaswordChange" boolean DEFAULT false NOT NULL,
+    "Enabled" boolean DEFAULT true NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone NOT NULL,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone,
+    "Phone" character varying(50),
+    "DocumentTypeId" uuid NOT NULL,
+    "DocumentNo" character varying(150) NOT NULL,
+    "TrainingCenterId" uuid,
+    "GlobalUser" boolean
+);
+
+
+ALTER TABLE public."AccessUser" OWNER TO postgres;
+
+--
+-- TOC entry 215 (class 1259 OID 16407)
+-- Name: AccessUserBusinessUnits; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."AccessUserBusinessUnits" (
+    "AccessUserId" uuid NOT NULL,
+    "BusinessUnitId" uuid NOT NULL
+);
+
+
+ALTER TABLE public."AccessUserBusinessUnits" OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 16410)
+-- Name: AccessUserPassword; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."AccessUserPassword" (
+    "AccessUserId" uuid NOT NULL,
+    "Password" character varying(256) NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone NOT NULL,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."AccessUserPassword" OWNER TO postgres;
+
+--
+-- TOC entry 217 (class 1259 OID 16415)
+-- Name: AccessUserRoles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."AccessUserRoles" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "AccessUserId" uuid,
+    "AccessUserExternalId" character varying(250),
+    "RolId" uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL
+);
+
+
+ALTER TABLE public."AccessUserRoles" OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 16419)
+-- Name: Beneficiaries; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Beneficiaries" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL,
+    "DocumentTypeId" uuid NOT NULL,
+    "DocumentNumber" character varying(50) NOT NULL,
+    "FirstName" character varying(250) NOT NULL,
+    "OtherNames" character varying(250),
+    "LastName" character varying(250) NOT NULL,
+    "OtherLastName" character varying(250),
+    "GenderId" uuid NOT NULL,
+    "BirthDate" timestamp without time zone NOT NULL,
+    "BirthCountryId" uuid NOT NULL,
+    "BirthDepartmentId" uuid NOT NULL,
+    "BirthCityId" uuid NOT NULL,
+    "RhId" uuid NOT NULL,
+    "BloodTypeId" uuid NOT NULL,
+    "EmergencyPhoneNumber" character varying(50) NOT NULL,
+    "PhotoUrl" character varying(300),
+    "AdressZoneId" uuid NOT NULL,
+    "Adress" character varying(300),
+    "Neighborhood" character varying(300),
+    "AdressPhoneNumber" character varying(50),
+    "AdressObservations" character varying(500),
+    "Enabled" boolean DEFAULT true NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."Beneficiaries" OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 16426)
+-- Name: BeneficiariesFamily; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."BeneficiariesFamily" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL,
+    "BeneficiaryId" uuid NOT NULL,
+    "DocumentTypeId" uuid NOT NULL,
+    "DocumentNumber" character varying(50) NOT NULL,
+    "FirstName" character varying(250) NOT NULL,
+    "OtherNames" character varying(250),
+    "LastName" character varying(250) NOT NULL,
+    "OtherLastName" character varying(250),
+    "FamilyRelationId" uuid NOT NULL,
+    "Attendant" boolean DEFAULT false NOT NULL,
+    "Enabled" boolean DEFAULT true NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."BeneficiariesFamily" OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 16434)
+-- Name: BeneficiariesParameters; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."BeneficiariesParameters" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL,
+    "ParamType" character varying(100),
+    "ParamCode" character varying(100),
+    "ParamValue" character varying(200),
+    "Position" integer DEFAULT 0
+);
+
+
+ALTER TABLE public."BeneficiariesParameters" OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 16439)
+-- Name: BeneficiaryAnthropometricData; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."BeneficiaryAnthropometricData" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "BeneficiaryId" uuid NOT NULL,
+    "TrainingCenterId" uuid NOT NULL,
+    "Comment" character varying(500),
+    "Weight" numeric(10,2) NOT NULL,
+    "Height" numeric(10,2) NOT NULL,
+    "Bmi" numeric(10,2) NOT NULL,
+    "CreatedOn" timestamp without time zone NOT NULL,
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."BeneficiaryAnthropometricData" OWNER TO postgres;
+
+--
+-- TOC entry 222 (class 1259 OID 16445)
+-- Name: BeneficiaryEmotionsData; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."BeneficiaryEmotionsData" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "BeneficiaryId" uuid NOT NULL,
+    "DevelopmentRoomId" uuid NOT NULL,
+    "IntegrationId" character varying(100) NOT NULL,
+    "EmotionId" integer NOT NULL,
+    "CreatedOn" timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public."BeneficiaryEmotionsData" OWNER TO postgres;
+
+--
+-- TOC entry 242 (class 1259 OID 16919)
+-- Name: BeneficiaryRawEmotionsData; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."BeneficiaryRawEmotionsData" (
+    "Id" character varying(100) NOT NULL,
+    "PersonId" character varying(100) NOT NULL,
+    "DahuaChannelName" character varying(100) NOT NULL,
+    "EmotionId" integer NOT NULL,
+    "CreatedOn" timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public."BeneficiaryRawEmotionsData" OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 16449)
+-- Name: BusinessUnit; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."BusinessUnit" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL,
+    "Name" character varying(250),
+    "Enabled" boolean DEFAULT true NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone NOT NULL,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."BusinessUnit" OWNER TO postgres;
+
+--
+-- TOC entry 224 (class 1259 OID 16456)
+-- Name: Campus; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Campus" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL,
+    "TrainingCenterId" uuid NOT NULL,
+    "Code" character varying(50) NOT NULL,
+    "Name" character varying(300) NOT NULL,
+    "IntegrationCode" character varying(50),
+    "Enabled" boolean DEFAULT true NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."Campus" OWNER TO postgres;
+
+--
+-- TOC entry 225 (class 1259 OID 16463)
+-- Name: CampusByAccessUser; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."CampusByAccessUser" (
+    "OrganizationId" uuid NOT NULL,
+    "TrainingCenterId" uuid NOT NULL,
+    "CampusId" uuid NOT NULL,
+    "AccessUserId" uuid NOT NULL
+);
+
+
+ALTER TABLE public."CampusByAccessUser" OWNER TO postgres;
+
+--
+-- TOC entry 226 (class 1259 OID 16466)
+-- Name: City; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."City" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "DepartmentId" uuid NOT NULL,
+    "Code" character varying(20) NOT NULL,
+    "Name" character varying(250) NOT NULL
+);
+
+
+ALTER TABLE public."City" OWNER TO postgres;
+
+--
+-- TOC entry 227 (class 1259 OID 16470)
+-- Name: Country; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Country" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "Code" character varying(20) NOT NULL,
+    "Name" character varying(250) NOT NULL
+);
+
+
+ALTER TABLE public."Country" OWNER TO postgres;
+
+--
+-- TOC entry 228 (class 1259 OID 16474)
+-- Name: Department; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Department" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "CountryId" uuid NOT NULL,
+    "Code" character varying(20) NOT NULL,
+    "Name" character varying(250) NOT NULL
+);
+
+
+ALTER TABLE public."Department" OWNER TO postgres;
+
+--
+-- TOC entry 229 (class 1259 OID 16478)
+-- Name: DevelopmentRoom; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."DevelopmentRoom" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL,
+    "TrainingCenterId" uuid NOT NULL,
+    "CampusId" uuid NOT NULL,
+    "Code" character varying(50) NOT NULL,
+    "Name" character varying(300) NOT NULL,
+    "IntegrationCode" character varying(50),
+    "DahuaChannelCode" character varying(100),
+    "Enabled" boolean DEFAULT true NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."DevelopmentRoom" OWNER TO postgres;
+
+--
+-- TOC entry 230 (class 1259 OID 16485)
+-- Name: DevelopmentRoomGroupAgent; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."DevelopmentRoomGroupAgent" (
+    "DevelopmentRoomGroupByYearId" uuid NOT NULL,
+    "AccessUserId" uuid NOT NULL
+);
+
+
+ALTER TABLE public."DevelopmentRoomGroupAgent" OWNER TO postgres;
+
+--
+-- TOC entry 231 (class 1259 OID 16488)
+-- Name: DevelopmentRoomGroupBeneficiary; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."DevelopmentRoomGroupBeneficiary" (
+    "OrganizationId" uuid NOT NULL,
+    "TrainingCenterId" uuid NOT NULL,
+    "CampusId" uuid NOT NULL,
+    "DevelopmentRoomId" uuid NOT NULL,
+    "DevelopmentRoomGroupByYearId" uuid NOT NULL,
+    "BeneficiaryId" uuid NOT NULL
+);
+
+
+ALTER TABLE public."DevelopmentRoomGroupBeneficiary" OWNER TO postgres;
+
+--
+-- TOC entry 232 (class 1259 OID 16491)
+-- Name: DevelopmentRoomGroupByYear; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."DevelopmentRoomGroupByYear" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL,
+    "DevelopmentRoomId" uuid NOT NULL,
+    "Year" integer DEFAULT 0 NOT NULL,
+    "GroupCode" character varying(50) NOT NULL,
+    "GroupName" character varying(250) NOT NULL,
+    "Enabled" boolean DEFAULT true NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."DevelopmentRoomGroupByYear" OWNER TO postgres;
+
+--
+-- TOC entry 233 (class 1259 OID 16499)
+-- Name: DocumentTypes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."DocumentTypes" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL,
+    "Code" character varying(10) NOT NULL,
+    "Name" character varying(150) NOT NULL,
+    "Enabled" boolean DEFAULT true NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone NOT NULL,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."DocumentTypes" OWNER TO postgres;
+
+--
+-- TOC entry 234 (class 1259 OID 16506)
+-- Name: Holidays; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Holidays" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "Year" integer NOT NULL,
+    "Day" timestamp without time zone NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."Holidays" OWNER TO postgres;
+
+--
+-- TOC entry 235 (class 1259 OID 16510)
+-- Name: Menu; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Menu" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL,
+    "MenuLabel" character varying(150) NOT NULL,
+    "Description" character varying(500),
+    "ParentMenuId" uuid,
+    "Position" integer DEFAULT 0,
+    "ExternalUrl" character varying(500),
+    "Route" character varying(500),
+    "PermissionId" uuid NOT NULL,
+    "Enabled" boolean DEFAULT true NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone NOT NULL,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."Menu" OWNER TO postgres;
+
+--
+-- TOC entry 236 (class 1259 OID 16518)
+-- Name: Organization; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Organization" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "Name" character varying(250),
+    "Enabled" boolean DEFAULT true NOT NULL,
+    "CreatedBy" character varying(250),
+    "CreatedOn" timestamp without time zone,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."Organization" OWNER TO postgres;
+
+--
+-- TOC entry 237 (class 1259 OID 16525)
+-- Name: Permission; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Permission" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL,
+    "Name" character varying(150) NOT NULL,
+    "Description" character varying(500),
+    "Type" character varying(50) NOT NULL,
+    "Enabled" boolean DEFAULT true NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone NOT NULL,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."Permission" OWNER TO postgres;
+
+--
+-- TOC entry 238 (class 1259 OID 16532)
+-- Name: Rol; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Rol" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL,
+    "Name" character varying(150) NOT NULL,
+    "Description" character varying(500),
+    "NewAccessUserDefaultRol" boolean DEFAULT false NOT NULL,
+    "Enabled" boolean DEFAULT true NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone NOT NULL,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."Rol" OWNER TO postgres;
+
+--
+-- TOC entry 239 (class 1259 OID 16540)
+-- Name: RolPermission; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."RolPermission" (
+    "OrganizationId" uuid NOT NULL,
+    "RolId" uuid NOT NULL,
+    "PermissionId" uuid NOT NULL,
+    "AllowView" boolean DEFAULT false NOT NULL,
+    "AllowUse" boolean DEFAULT false NOT NULL,
+    "AllowCreate" boolean DEFAULT false NOT NULL,
+    "AllowUpdate" boolean DEFAULT false NOT NULL,
+    "AllowDelete" boolean DEFAULT false NOT NULL
+);
+
+
+ALTER TABLE public."RolPermission" OWNER TO postgres;
+
+--
+-- TOC entry 240 (class 1259 OID 16548)
+-- Name: TrainingCenter; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."TrainingCenter" (
+    "Id" uuid DEFAULT (md5(((random())::text || (clock_timestamp())::text)))::uuid NOT NULL,
+    "OrganizationId" uuid NOT NULL,
+    "Code" character varying(50) NOT NULL,
+    "Name" character varying(300) NOT NULL,
+    "IntegrationCode" character varying(50),
+    "Enabled" boolean DEFAULT true NOT NULL,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."TrainingCenter" OWNER TO postgres;
+
+--
+-- TOC entry 241 (class 1259 OID 16555)
+-- Name: WorkingDayOfWeek; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."WorkingDayOfWeek" (
+    "Year" integer NOT NULL,
+    "Monday" boolean,
+    "Tuesday" boolean,
+    "Wednesday" boolean,
+    "Thursday" boolean,
+    "Friday" boolean,
+    "Saturday" boolean,
+    "Sunday" boolean,
+    "CreatedBy" character varying(250) NOT NULL,
+    "CreatedOn" timestamp without time zone,
+    "ModifiedBy" character varying(250),
+    "ModifiedOn" timestamp without time zone
+);
+
+
+ALTER TABLE public."WorkingDayOfWeek" OWNER TO postgres;
+
+--
+-- TOC entry 3330 (class 2606 OID 16561)
+-- Name: AccessUser pk__accessus_214ec0757d29ec9; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AccessUser"
+    ADD CONSTRAINT pk__accessus_214ec0757d29ec9 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3336 (class 2606 OID 16563)
+-- Name: AccessUserRoles pk__accessus_214ec07f07a8c13; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AccessUserRoles"
+    ADD CONSTRAINT pk__accessus_214ec07f07a8c13 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3334 (class 2606 OID 16565)
+-- Name: AccessUserPassword pk__accessus__ecc3977bf4fa0466; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AccessUserPassword"
+    ADD CONSTRAINT pk__accessus__ecc3977bf4fa0466 PRIMARY KEY ("AccessUserId");
+
+
+--
+-- TOC entry 3344 (class 2606 OID 16567)
+-- Name: BeneficiariesParameters pk__benefici_214ec075d53a550; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiariesParameters"
+    ADD CONSTRAINT pk__benefici_214ec075d53a550 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3339 (class 2606 OID 16569)
+-- Name: Beneficiaries pk__benefici_214ec0787e6bc32; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Beneficiaries"
+    ADD CONSTRAINT pk__benefici_214ec0787e6bc32 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3342 (class 2606 OID 16571)
+-- Name: BeneficiariesFamily pk__benefici_214ec07b2dc7db5; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiariesFamily"
+    ADD CONSTRAINT pk__benefici_214ec07b2dc7db5 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3346 (class 2606 OID 16573)
+-- Name: BeneficiaryAnthropometricData pk__benefici_214ec07c3ee67ae; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiaryAnthropometricData"
+    ADD CONSTRAINT pk__benefici_214ec07c3ee67ae PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3348 (class 2606 OID 16575)
+-- Name: BeneficiaryEmotionsData pk__benefici_214ec07ec7a2e2e; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiaryEmotionsData"
+    ADD CONSTRAINT pk__benefici_214ec07ec7a2e2e PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3350 (class 2606 OID 16577)
+-- Name: BusinessUnit pk__business_214ec0712ec038e; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BusinessUnit"
+    ADD CONSTRAINT pk__business_214ec0712ec038e PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3352 (class 2606 OID 16579)
+-- Name: Campus pk__campus_214ec07ae145f93; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Campus"
+    ADD CONSTRAINT pk__campus_214ec07ae145f93 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3357 (class 2606 OID 16581)
+-- Name: City pk__city_214ec07b405a029; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."City"
+    ADD CONSTRAINT pk__city_214ec07b405a029 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3359 (class 2606 OID 16583)
+-- Name: Country pk__country_214ec07606cef15; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Country"
+    ADD CONSTRAINT pk__country_214ec07606cef15 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3361 (class 2606 OID 16585)
+-- Name: Department pk__departme_214ec07c09f4ea9; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Department"
+    ADD CONSTRAINT pk__departme_214ec07c09f4ea9 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3369 (class 2606 OID 16587)
+-- Name: DevelopmentRoomGroupByYear pk__developm_214ec07191620a1; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoomGroupByYear"
+    ADD CONSTRAINT pk__developm_214ec07191620a1 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3363 (class 2606 OID 16589)
+-- Name: DevelopmentRoom pk__developm_214ec07efd510e0; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoom"
+    ADD CONSTRAINT pk__developm_214ec07efd510e0 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3372 (class 2606 OID 16591)
+-- Name: DocumentTypes pk__document_214ec07e9055dfb; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DocumentTypes"
+    ADD CONSTRAINT pk__document_214ec07e9055dfb PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3374 (class 2606 OID 16593)
+-- Name: Holidays pk__holidays_214ec0768646a68; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Holidays"
+    ADD CONSTRAINT pk__holidays_214ec0768646a68 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3376 (class 2606 OID 16595)
+-- Name: Menu pk__menu_214ec0708955afe; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Menu"
+    ADD CONSTRAINT pk__menu_214ec0708955afe PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3378 (class 2606 OID 16597)
+-- Name: Organization pk__organiza_214ec078ab786eb; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Organization"
+    ADD CONSTRAINT pk__organiza_214ec078ab786eb PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3381 (class 2606 OID 16599)
+-- Name: Permission pk__permissi_214ec07092532a5; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Permission"
+    ADD CONSTRAINT pk__permissi_214ec07092532a5 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3383 (class 2606 OID 16601)
+-- Name: Rol pk__rol_214ec07527a4213; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Rol"
+    ADD CONSTRAINT pk__rol_214ec07527a4213 PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3387 (class 2606 OID 16603)
+-- Name: TrainingCenter pk__training_214ec0702fbd55e; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."TrainingCenter"
+    ADD CONSTRAINT pk__training_214ec0702fbd55e PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3390 (class 2606 OID 16605)
+-- Name: WorkingDayOfWeek pk__workingd__d4bd6055cd9b36a3; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."WorkingDayOfWeek"
+    ADD CONSTRAINT pk__workingd__d4bd6055cd9b36a3 PRIMARY KEY ("Year");
+
+
+--
+-- TOC entry 3332 (class 2606 OID 16607)
+-- Name: AccessUserBusinessUnits pk_accessuserbu; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AccessUserBusinessUnits"
+    ADD CONSTRAINT pk_accessuserbu PRIMARY KEY ("AccessUserId", "BusinessUnitId");
+
+
+--
+-- TOC entry 3392 (class 2606 OID 16923)
+-- Name: BeneficiaryRawEmotionsData pk_beneficiaryrawemotionsdata; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiaryRawEmotionsData"
+    ADD CONSTRAINT pk_beneficiaryrawemotionsdata PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 3355 (class 2606 OID 16609)
+-- Name: CampusByAccessUser pk_cmpbyau; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."CampusByAccessUser"
+    ADD CONSTRAINT pk_cmpbyau PRIMARY KEY ("OrganizationId", "TrainingCenterId", "CampusId", "AccessUserId");
+
+
+--
+-- TOC entry 3365 (class 2606 OID 16611)
+-- Name: DevelopmentRoomGroupAgent pk_developmentroomgroupagent; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoomGroupAgent"
+    ADD CONSTRAINT pk_developmentroomgroupagent PRIMARY KEY ("DevelopmentRoomGroupByYearId", "AccessUserId");
+
+
+--
+-- TOC entry 3367 (class 2606 OID 16613)
+-- Name: DevelopmentRoomGroupBeneficiary pk_developmentroomgroupbeneficiary; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoomGroupBeneficiary"
+    ADD CONSTRAINT pk_developmentroomgroupbeneficiary PRIMARY KEY ("DevelopmentRoomGroupByYearId", "BeneficiaryId");
+
+
+--
+-- TOC entry 3385 (class 2606 OID 16615)
+-- Name: RolPermission pk_rolpermission; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."RolPermission"
+    ADD CONSTRAINT pk_rolpermission PRIMARY KEY ("OrganizationId", "RolId", "PermissionId");
+
+
+--
+-- TOC entry 3337 (class 1259 OID 16616)
+-- Name: unq_accessuserrol; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX unq_accessuserrol ON public."AccessUserRoles" USING btree ("AccessUserId", "AccessUserExternalId", "RolId");
+
+
+--
+-- TOC entry 3370 (class 1259 OID 16617)
+-- Name: unq_adr_group; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX unq_adr_group ON public."DevelopmentRoomGroupByYear" USING btree ("DevelopmentRoomId", "Year", "GroupCode", "GroupName");
+
+
+--
+-- TOC entry 3340 (class 1259 OID 16618)
+-- Name: unq_beneficiary; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX unq_beneficiary ON public."Beneficiaries" USING btree ("DocumentTypeId", "DocumentNumber");
+
+
+--
+-- TOC entry 3353 (class 1259 OID 16619)
+-- Name: unq_campus; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX unq_campus ON public."Campus" USING btree ("OrganizationId", "TrainingCenterId", "Code");
+
+
+--
+-- TOC entry 3379 (class 1259 OID 16620)
+-- Name: unq_organization; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX unq_organization ON public."Organization" USING btree ("Name");
+
+
+--
+-- TOC entry 3388 (class 1259 OID 16621)
+-- Name: unq_trainingcenter; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX unq_trainingcenter ON public."TrainingCenter" USING btree ("OrganizationId", "Code");
+
+
+--
+-- TOC entry 3393 (class 2606 OID 16622)
+-- Name: AccessUser fk_accessuser_dt; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AccessUser"
+    ADD CONSTRAINT fk_accessuser_dt FOREIGN KEY ("DocumentTypeId") REFERENCES public."DocumentTypes"("Id");
+
+
+--
+-- TOC entry 3394 (class 2606 OID 16627)
+-- Name: AccessUser fk_accessuser_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AccessUser"
+    ADD CONSTRAINT fk_accessuser_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3396 (class 2606 OID 16632)
+-- Name: AccessUserBusinessUnits fk_accessuserbu_bu; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AccessUserBusinessUnits"
+    ADD CONSTRAINT fk_accessuserbu_bu FOREIGN KEY ("BusinessUnitId") REFERENCES public."BusinessUnit"("Id");
+
+
+--
+-- TOC entry 3397 (class 2606 OID 16637)
+-- Name: AccessUserBusinessUnits fk_accessuserbu_u; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AccessUserBusinessUnits"
+    ADD CONSTRAINT fk_accessuserbu_u FOREIGN KEY ("AccessUserId") REFERENCES public."AccessUser"("Id");
+
+
+--
+-- TOC entry 3398 (class 2606 OID 16642)
+-- Name: AccessUserPassword fk_accessuserpassword_au; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AccessUserPassword"
+    ADD CONSTRAINT fk_accessuserpassword_au FOREIGN KEY ("AccessUserId") REFERENCES public."AccessUser"("Id");
+
+
+--
+-- TOC entry 3399 (class 2606 OID 16647)
+-- Name: AccessUserRoles fk_accessuserrol_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AccessUserRoles"
+    ADD CONSTRAINT fk_accessuserrol_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3400 (class 2606 OID 16652)
+-- Name: AccessUserRoles fk_accessuserrol_r; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AccessUserRoles"
+    ADD CONSTRAINT fk_accessuserrol_r FOREIGN KEY ("RolId") REFERENCES public."Rol"("Id");
+
+
+--
+-- TOC entry 3401 (class 2606 OID 16657)
+-- Name: AccessUserRoles fk_accessuserrol_u; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AccessUserRoles"
+    ADD CONSTRAINT fk_accessuserrol_u FOREIGN KEY ("AccessUserId") REFERENCES public."AccessUser"("Id");
+
+
+--
+-- TOC entry 3440 (class 2606 OID 16662)
+-- Name: DevelopmentRoomGroupByYear fk_adr_dr; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoomGroupByYear"
+    ADD CONSTRAINT fk_adr_dr FOREIGN KEY ("DevelopmentRoomId") REFERENCES public."DevelopmentRoom"("Id");
+
+
+--
+-- TOC entry 3441 (class 2606 OID 16667)
+-- Name: DevelopmentRoomGroupByYear fk_adr_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoomGroupByYear"
+    ADD CONSTRAINT fk_adr_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3402 (class 2606 OID 16672)
+-- Name: Beneficiaries fk_adresszone; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Beneficiaries"
+    ADD CONSTRAINT fk_adresszone FOREIGN KEY ("AdressZoneId") REFERENCES public."BeneficiariesParameters"("Id");
+
+
+--
+-- TOC entry 3395 (class 2606 OID 16677)
+-- Name: AccessUser fk_auser_tc; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."AccessUser"
+    ADD CONSTRAINT fk_auser_tc FOREIGN KEY ("TrainingCenterId") REFERENCES public."TrainingCenter"("Id");
+
+
+--
+-- TOC entry 3416 (class 2606 OID 16682)
+-- Name: BeneficiaryAnthropometricData fk_bad_beneficiary; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiaryAnthropometricData"
+    ADD CONSTRAINT fk_bad_beneficiary FOREIGN KEY ("BeneficiaryId") REFERENCES public."Beneficiaries"("Id");
+
+
+--
+-- TOC entry 3417 (class 2606 OID 16687)
+-- Name: BeneficiaryAnthropometricData fk_bad_traningcenter; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiaryAnthropometricData"
+    ADD CONSTRAINT fk_bad_traningcenter FOREIGN KEY ("TrainingCenterId") REFERENCES public."TrainingCenter"("Id");
+
+
+--
+-- TOC entry 3418 (class 2606 OID 16692)
+-- Name: BeneficiaryEmotionsData fk_bed_beneficiary; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiaryEmotionsData"
+    ADD CONSTRAINT fk_bed_beneficiary FOREIGN KEY ("BeneficiaryId") REFERENCES public."Beneficiaries"("Id");
+
+
+--
+-- TOC entry 3419 (class 2606 OID 16697)
+-- Name: BeneficiaryEmotionsData fk_bed_devroom; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiaryEmotionsData"
+    ADD CONSTRAINT fk_bed_devroom FOREIGN KEY ("DevelopmentRoomId") REFERENCES public."DevelopmentRoom"("Id");
+
+
+--
+-- TOC entry 3411 (class 2606 OID 16702)
+-- Name: BeneficiariesFamily fk_benefam_ben; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiariesFamily"
+    ADD CONSTRAINT fk_benefam_ben FOREIGN KEY ("BeneficiaryId") REFERENCES public."Beneficiaries"("Id");
+
+
+--
+-- TOC entry 3412 (class 2606 OID 16707)
+-- Name: BeneficiariesFamily fk_benefam_dt; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiariesFamily"
+    ADD CONSTRAINT fk_benefam_dt FOREIGN KEY ("DocumentTypeId") REFERENCES public."DocumentTypes"("Id");
+
+
+--
+-- TOC entry 3413 (class 2606 OID 16712)
+-- Name: BeneficiariesFamily fk_benefam_familyrelation; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiariesFamily"
+    ADD CONSTRAINT fk_benefam_familyrelation FOREIGN KEY ("FamilyRelationId") REFERENCES public."BeneficiariesParameters"("Id");
+
+
+--
+-- TOC entry 3414 (class 2606 OID 16717)
+-- Name: BeneficiariesFamily fk_benefam_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiariesFamily"
+    ADD CONSTRAINT fk_benefam_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3403 (class 2606 OID 16722)
+-- Name: Beneficiaries fk_beneficiaries_dt; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Beneficiaries"
+    ADD CONSTRAINT fk_beneficiaries_dt FOREIGN KEY ("DocumentTypeId") REFERENCES public."DocumentTypes"("Id");
+
+
+--
+-- TOC entry 3404 (class 2606 OID 16727)
+-- Name: Beneficiaries fk_beneficiaries_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Beneficiaries"
+    ADD CONSTRAINT fk_beneficiaries_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3415 (class 2606 OID 16732)
+-- Name: BeneficiariesParameters fk_beneficiariesparameters_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BeneficiariesParameters"
+    ADD CONSTRAINT fk_beneficiariesparameters_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3405 (class 2606 OID 16737)
+-- Name: Beneficiaries fk_birthcity; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Beneficiaries"
+    ADD CONSTRAINT fk_birthcity FOREIGN KEY ("BirthCityId") REFERENCES public."City"("Id");
+
+
+--
+-- TOC entry 3406 (class 2606 OID 16742)
+-- Name: Beneficiaries fk_birthcountry; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Beneficiaries"
+    ADD CONSTRAINT fk_birthcountry FOREIGN KEY ("BirthCountryId") REFERENCES public."Country"("Id");
+
+
+--
+-- TOC entry 3407 (class 2606 OID 16747)
+-- Name: Beneficiaries fk_birthdepartment; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Beneficiaries"
+    ADD CONSTRAINT fk_birthdepartment FOREIGN KEY ("BirthDepartmentId") REFERENCES public."Department"("Id");
+
+
+--
+-- TOC entry 3408 (class 2606 OID 16752)
+-- Name: Beneficiaries fk_bloodtype; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Beneficiaries"
+    ADD CONSTRAINT fk_bloodtype FOREIGN KEY ("BloodTypeId") REFERENCES public."BeneficiariesParameters"("Id");
+
+
+--
+-- TOC entry 3420 (class 2606 OID 16757)
+-- Name: BusinessUnit fk_businessunit_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."BusinessUnit"
+    ADD CONSTRAINT fk_businessunit_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3421 (class 2606 OID 16762)
+-- Name: Campus fk_campus_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Campus"
+    ADD CONSTRAINT fk_campus_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3422 (class 2606 OID 16767)
+-- Name: Campus fk_campus_tc; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Campus"
+    ADD CONSTRAINT fk_campus_tc FOREIGN KEY ("TrainingCenterId") REFERENCES public."TrainingCenter"("Id");
+
+
+--
+-- TOC entry 3427 (class 2606 OID 16772)
+-- Name: City fk_city_dept; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."City"
+    ADD CONSTRAINT fk_city_dept FOREIGN KEY ("DepartmentId") REFERENCES public."Department"("Id");
+
+
+--
+-- TOC entry 3423 (class 2606 OID 16777)
+-- Name: CampusByAccessUser fk_cmpbyau_au; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."CampusByAccessUser"
+    ADD CONSTRAINT fk_cmpbyau_au FOREIGN KEY ("AccessUserId") REFERENCES public."AccessUser"("Id");
+
+
+--
+-- TOC entry 3424 (class 2606 OID 16782)
+-- Name: CampusByAccessUser fk_cmpbyau_cmp; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."CampusByAccessUser"
+    ADD CONSTRAINT fk_cmpbyau_cmp FOREIGN KEY ("CampusId") REFERENCES public."Campus"("Id");
+
+
+--
+-- TOC entry 3425 (class 2606 OID 16787)
+-- Name: CampusByAccessUser fk_cmpbyau_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."CampusByAccessUser"
+    ADD CONSTRAINT fk_cmpbyau_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3426 (class 2606 OID 16792)
+-- Name: CampusByAccessUser fk_cmpbyau_tc; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."CampusByAccessUser"
+    ADD CONSTRAINT fk_cmpbyau_tc FOREIGN KEY ("TrainingCenterId") REFERENCES public."TrainingCenter"("Id");
+
+
+--
+-- TOC entry 3428 (class 2606 OID 16797)
+-- Name: Department fk_dept_country; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Department"
+    ADD CONSTRAINT fk_dept_country FOREIGN KEY ("CountryId") REFERENCES public."Country"("Id");
+
+
+--
+-- TOC entry 3429 (class 2606 OID 16802)
+-- Name: DevelopmentRoom fk_devroom_campus; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoom"
+    ADD CONSTRAINT fk_devroom_campus FOREIGN KEY ("CampusId") REFERENCES public."Campus"("Id");
+
+
+--
+-- TOC entry 3430 (class 2606 OID 16807)
+-- Name: DevelopmentRoom fk_devroom_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoom"
+    ADD CONSTRAINT fk_devroom_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3431 (class 2606 OID 16812)
+-- Name: DevelopmentRoom fk_devroom_tc; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoom"
+    ADD CONSTRAINT fk_devroom_tc FOREIGN KEY ("TrainingCenterId") REFERENCES public."TrainingCenter"("Id");
+
+
+--
+-- TOC entry 3442 (class 2606 OID 16817)
+-- Name: DocumentTypes fk_documenttypes_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DocumentTypes"
+    ADD CONSTRAINT fk_documenttypes_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3432 (class 2606 OID 16822)
+-- Name: DevelopmentRoomGroupAgent fk_drga_au; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoomGroupAgent"
+    ADD CONSTRAINT fk_drga_au FOREIGN KEY ("AccessUserId") REFERENCES public."AccessUser"("Id");
+
+
+--
+-- TOC entry 3433 (class 2606 OID 16827)
+-- Name: DevelopmentRoomGroupAgent fk_drga_dry; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoomGroupAgent"
+    ADD CONSTRAINT fk_drga_dry FOREIGN KEY ("DevelopmentRoomGroupByYearId") REFERENCES public."DevelopmentRoomGroupByYear"("Id");
+
+
+--
+-- TOC entry 3434 (class 2606 OID 16832)
+-- Name: DevelopmentRoomGroupBeneficiary fk_drgb_au; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoomGroupBeneficiary"
+    ADD CONSTRAINT fk_drgb_au FOREIGN KEY ("BeneficiaryId") REFERENCES public."Beneficiaries"("Id");
+
+
+--
+-- TOC entry 3435 (class 2606 OID 16837)
+-- Name: DevelopmentRoomGroupBeneficiary fk_drgb_cmp; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoomGroupBeneficiary"
+    ADD CONSTRAINT fk_drgb_cmp FOREIGN KEY ("CampusId") REFERENCES public."Campus"("Id");
+
+
+--
+-- TOC entry 3436 (class 2606 OID 16842)
+-- Name: DevelopmentRoomGroupBeneficiary fk_drgb_dr; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoomGroupBeneficiary"
+    ADD CONSTRAINT fk_drgb_dr FOREIGN KEY ("DevelopmentRoomId") REFERENCES public."DevelopmentRoom"("Id");
+
+
+--
+-- TOC entry 3437 (class 2606 OID 16847)
+-- Name: DevelopmentRoomGroupBeneficiary fk_drgb_dry; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoomGroupBeneficiary"
+    ADD CONSTRAINT fk_drgb_dry FOREIGN KEY ("DevelopmentRoomGroupByYearId") REFERENCES public."DevelopmentRoomGroupByYear"("Id");
+
+
+--
+-- TOC entry 3438 (class 2606 OID 16852)
+-- Name: DevelopmentRoomGroupBeneficiary fk_drgb_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoomGroupBeneficiary"
+    ADD CONSTRAINT fk_drgb_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3439 (class 2606 OID 16857)
+-- Name: DevelopmentRoomGroupBeneficiary fk_drgb_tr; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."DevelopmentRoomGroupBeneficiary"
+    ADD CONSTRAINT fk_drgb_tr FOREIGN KEY ("TrainingCenterId") REFERENCES public."TrainingCenter"("Id");
+
+
+--
+-- TOC entry 3409 (class 2606 OID 16862)
+-- Name: Beneficiaries fk_gender; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Beneficiaries"
+    ADD CONSTRAINT fk_gender FOREIGN KEY ("GenderId") REFERENCES public."BeneficiariesParameters"("Id");
+
+
+--
+-- TOC entry 3443 (class 2606 OID 16867)
+-- Name: Menu fk_menu_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Menu"
+    ADD CONSTRAINT fk_menu_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3444 (class 2606 OID 16872)
+-- Name: Menu fk_menu_parentmenu; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Menu"
+    ADD CONSTRAINT fk_menu_parentmenu FOREIGN KEY ("ParentMenuId") REFERENCES public."Menu"("Id");
+
+
+--
+-- TOC entry 3445 (class 2606 OID 16877)
+-- Name: Menu fk_menu_perm; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Menu"
+    ADD CONSTRAINT fk_menu_perm FOREIGN KEY ("PermissionId") REFERENCES public."Permission"("Id");
+
+
+--
+-- TOC entry 3446 (class 2606 OID 16882)
+-- Name: Permission fk_permission_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Permission"
+    ADD CONSTRAINT fk_permission_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3410 (class 2606 OID 16887)
+-- Name: Beneficiaries fk_rh; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Beneficiaries"
+    ADD CONSTRAINT fk_rh FOREIGN KEY ("RhId") REFERENCES public."BeneficiariesParameters"("Id");
+
+
+--
+-- TOC entry 3447 (class 2606 OID 16892)
+-- Name: Rol fk_rol_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Rol"
+    ADD CONSTRAINT fk_rol_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3448 (class 2606 OID 16897)
+-- Name: RolPermission fk_rolpermission_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."RolPermission"
+    ADD CONSTRAINT fk_rolpermission_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+--
+-- TOC entry 3449 (class 2606 OID 16902)
+-- Name: RolPermission fk_rolpermission_p; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."RolPermission"
+    ADD CONSTRAINT fk_rolpermission_p FOREIGN KEY ("PermissionId") REFERENCES public."Permission"("Id");
+
+
+--
+-- TOC entry 3450 (class 2606 OID 16907)
+-- Name: RolPermission fk_rolpermission_rol; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."RolPermission"
+    ADD CONSTRAINT fk_rolpermission_rol FOREIGN KEY ("RolId") REFERENCES public."Rol"("Id");
+
+
+--
+-- TOC entry 3451 (class 2606 OID 16912)
+-- Name: TrainingCenter fk_traningcenter_org; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."TrainingCenter"
+    ADD CONSTRAINT fk_traningcenter_org FOREIGN KEY ("OrganizationId") REFERENCES public."Organization"("Id");
+
+
+-- Completed on 2023-05-19 07:03:31
+
+--
+-- PostgreSQL database dump complete
+--
+
